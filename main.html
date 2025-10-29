@@ -1,16 +1,141 @@
 <!DOCTYPE html>
-
 <html>
-
 <head>
-	<link rel="stylesheet" href="styles.css">
+  <title>Progress Bar Component</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 50px;
+    }
+
+    .progress-container {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+      width: 400px;
+      margin-bottom: 30px;
+    }
+
+    /* Progress line */
+    .progress {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      height: 4px;
+      background-color: #d3d3d3;
+      width: 100%;
+      transform: translateY(-50%);
+      z-index: 1;
+    }
+
+    .progress-active {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      height: 4px;
+      background-color: #4caf50;
+      width: 0%;
+      transform: translateY(-50%);
+      z-index: 2;
+      transition: width 0.3s ease;
+    }
+
+    /* Circles */
+    .circle {
+      width: 30px;
+      height: 30px;
+      background-color: #d3d3d3;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      z-index: 3;
+      transition: background-color 0.3s ease;
+    }
+
+    .circle.active {
+      background-color: #4caf50;
+      color: white;
+    }
+
+    /* Buttons */
+    button {
+      padding: 10px 20px;
+      margin: 0 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+  </style>
 </head>
-
 <body>
-	<!-- the entire body must be written by student -->
-    <script type="text/javascript" src="./script.js">
-</script>
 
+  <div class="progress-container">
+    <div class="progress"></div>
+    <div class="progress-active" id="progress-bar"></div>
+
+    <div class="circle active" id="circle-1">1</div>
+    <div class="circle" id="circle-2">2</div>
+    <div class="circle" id="circle-3">3</div>
+    <div class="circle" id="circle-4">4</div>
+    <div class="circle" id="circle-5">5</div>
+  </div>
+
+  <div>
+    <button id="prev" disabled>Previous</button>
+    <button id="next">Next</button>
+  </div>
+
+  <script>
+    const prevBtn = document.getElementById('prev');
+    const nextBtn = document.getElementById('next');
+    const progress = document.getElementById('progress-bar');
+    const circles = document.querySelectorAll('.circle');
+
+    let currentStep = 1;
+
+    function update() {
+      // Activate circles up to currentStep
+      circles.forEach((circle, idx) => {
+        if (idx < currentStep) {
+          circle.classList.add('active');
+        } else {
+          circle.classList.remove('active');
+        }
+      });
+
+      // Update progress bar width
+      const progressPercent = ((currentStep - 1) / (circles.length - 1)) * 100;
+      progress.style.width = `${progressPercent}%`;
+
+      // Enable/disable buttons
+      prevBtn.disabled = currentStep === 1;
+      nextBtn.disabled = currentStep === circles.length;
+    }
+
+    nextBtn.addEventListener('click', () => {
+      if (currentStep < circles.length) {
+        currentStep++;
+        update();
+      }
+    });
+
+    prevBtn.addEventListener('click', () => {
+      if (currentStep > 1) {
+        currentStep--;
+        update();
+      }
+    });
+
+  </script>
 </body>
-
 </html>
